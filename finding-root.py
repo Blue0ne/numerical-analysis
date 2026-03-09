@@ -107,3 +107,29 @@ def false_position(xl, xu, xr_old=0):
     i += 1
     return false_position(xl, xu, xr)
 
+# Method Three
+def secant(xi_1, xi):
+    global new_eq, i, target_error
+
+    xi_2 = xi - (fn(xi) * (xi_1 - xi)) / (fn(xi_1) - fn(xi))
+
+    if i != 0:
+        error = abs((xi_2 - xi) / xi_2) * 100
+
+    print(f"I={i:2d} | "
+          f"Xi-1={xi_1:9.4f} | "
+          f"F(Xi-1)={fn(xi_1):9.4f} | "
+          f"Xi={xi:9.4f} | "
+          f"F(Xi)={fn(xi):9.4f}", end="")
+
+    if i != 0:
+        print(f" | ERROR= %{error:8.4f}", end="")
+
+    input("     Press [Enter] to show the next iteration")
+
+    if i != 0 and error <= target_error:
+        i = 0
+        return xi_2
+
+    i += 1
+    return secant(xi, xi_2)
