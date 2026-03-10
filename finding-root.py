@@ -193,3 +193,37 @@ def simple_fixed_point(xi):
 
     i += 1
     return simple_fixed_point(xi_1)
+
+# Method Five
+def bisection(xl, xu, xr_old=0):
+    global new_eq, i, target_error
+
+    xr = (xl + xu) / 2
+
+    if i != 0:
+        error = abs((xr - xr_old) / xr) * 100
+
+    print(f"I={i:2d} | "
+          f"XL={xl:9.4f} | "
+          f"F(XL)={fn(xl):9.4f} | "
+          f"XU={xu:9.4f} | "
+          f"F(XU)={fn(xu):9.4f} | "
+          f"XR={xr:9.4f} | "
+          f"F(XR)={fn(xr):9.4f}", end="")
+
+    if i != 0:
+        print(f" | ERROR= %{error:8.4f}", end="")
+
+    input("     Press [Enter] to show the next iteration")
+
+    if i != 0 and error <= target_error:
+        i = 0
+        return xr
+
+    if fn(xl) * fn(xr) < 0:
+        xu = xr
+    else:
+        xl = xr
+
+    i += 1
+    return bisection(xl, xu, xr)
