@@ -10,7 +10,8 @@ allowed = {
     "sqrt": math.sqrt,
     "sin": math.sin,
     "cos": math.cos,
-    "tan": math.tan
+    "tan": math.tan,
+    "e": math.e
 }
 
 print("This program finds the root of a given function, for power use '^'")
