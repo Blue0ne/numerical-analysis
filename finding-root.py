@@ -252,49 +252,57 @@ def main():
         print("3. False Position Method")
         print("4. Simple Fixed Point Method")
         print("5. Newton Method")
-        choice = input("Please enter the number of the desired method to calculate the root: ")
 
-        match choice:
-            case "1":
-                xl = float(input("Please enter the lower bound of the root: "))
-                xu = float(input("Please enter the upper bound of the root: "))
-                if fn(xl) * fn(xu) < 0:
-                    print("The equation is solvable")
-                    res = bisection(xl, xu)
+        is_chosen = False
+        while not is_chosen:
+            choice = input("Please enter the number of the desired method to calculate the root: ")
+
+            match choice:
+                case "1":
+                    is_chosen = True
+                    xl = float(input("Please enter the lower bound of the root: "))
+                    xu = float(input("Please enter the upper bound of the root: "))
+                    if fn(xl) * fn(xu) < 0:
+                        print("The equation is solvable")
+                        res = bisection(xl, xu)
+                        is_solved = True
+                    else:
+                        print("The equation is not solvable")
+
+                case "2":
+                    is_chosen = True
+                    xi_1 = float(input("Please enter Xi_-1: "))
+                    x0 = float(input("Please enter Xi_0: "))
+                    res = secant(xi_1, x0)
                     is_solved = True
-                else:
-                    print("The equation is not solvable")
 
-            case "2":
-                xi_1 = float(input("Please enter Xi_-1: "))
-                x0 = float(input("Please enter Xi_0: "))
-                res = secant(xi_1, x0)
-                is_solved = True
+                case "3":
+                    is_chosen = True
+                    xl = float(input("Please enter the lower bound of the root: "))
+                    xu = float(input("Please enter the upper bound of the root: "))
+                    if fn(xl) * fn(xu) < 0:
+                        print("The equation is solvable")
+                        res = false_position(xl, xu)
+                        is_solved = True
+                    else:
+                        print("The equation is not solvable")
 
-            case "3":
-                xl = float(input("Please enter the lower bound of the root: "))
-                xu = float(input("Please enter the upper bound of the root: "))
-                if fn(xl) * fn(xu) < 0:
-                    print("The equation is solvable")
-                    res = false_position(xl, xu)
+                case "4":
+                    is_chosen = True
+                    func_arrange()
+                    xi = float(input("Please enter the initial guess of the root: "))
+                    res = simple_fixed_point(xi)
                     is_solved = True
-                else:
-                    print("The equation is not solvable")
 
-            case "4":
-                func_arrange()
-                xi = float(input("Please enter the initial guess of the root: "))
-                res = simple_fixed_point(xi)
-                is_solved = True
+                case "5":
+                    is_chosen = True
+                    xi = float(input("Please enter the initial guess of the root: "))
+                    res = newton(xi)
+                    is_solved = True
 
-            case "5":
-                xi = float(input("Please enter the initial guess of the root: "))
-                res = newton(xi)
-                is_solved = True
-
-            case _:
-                print("Please enter a valid option")
-                continue
+                case _:
+                    print("Please enter a valid option")
+                    continue
 
         if is_solved:
             print("The result is: " + str(res))
