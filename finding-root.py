@@ -1,10 +1,21 @@
 import sympy as sp
+import math
 
 eq = ""
 new_eq = ""
 i = 0
+
+allowed = {
+    "math": math,
+    "sqrt": math.sqrt,
+    "sin": math.sin,
+    "cos": math.cos,
+    "tan": math.tan,
+    "e": math.e
+}
+
 print("This program finds the root of a given function, for power use '^'")
-target_error = float(input("Enter the acceptable error percentage: "))
+target_error = 0.0
 
 #----------------------------------- Functions that are needed for calculations ----------------------------------------
 
@@ -27,7 +38,7 @@ def func_input():
 
         try:
             x = 1
-            test = eval(new_eq)
+            eval(new_eq, allowed | {"x": x})
         except Exception:
             print("Please enter a valid function.")
             continue
@@ -38,7 +49,7 @@ def func_input():
 
 def fn(x):
     global new_eq
-    return eval(new_eq)
+    return eval(new_eq, allowed | {"x": x})
 
 def derive(equ):
     x = sp.symbols('x')
@@ -67,7 +78,7 @@ def func_arrange():
 
         try:
             x = 1
-            eval(arranged_func, {"x": x, "math": math, "sqrt": math.sqrt})
+            eval(arranged_func, allowed | {"x": x})
         except Exception:
             print("Please enter a valid function.")
             continue
@@ -78,7 +89,7 @@ def func_arrange():
 
 def solve(x):
     global arranged_func
-    return eval(arranged_func, {"x": x, "math": math, "sqrt": math.sqrt})
+    return eval(arranged_func, allowed | {"x": x})
 
 # --------------------------------------------- Method functions -------------------------------------------------------
 
@@ -227,3 +238,79 @@ def bisection(xl, xu, xr_old=0):
 
     i += 1
     return bisection(xl, xu, xr)
+
+def main():
+    global target_error
+    flag = True
+    while flag:
+        target_error = float(input("Enter the acceptable error percentage: "))
+        func_input()
+        is_solved = False
+
+        print("1. Bisection Method")
+        print("2. Secant Method")
+        print("3. False Position Method")
+        print("4. Simple Fixed Point Method")
+        print("5. Newton Method")
+
+        is_chosen = False
+        while not is_chosen:
+            choice = input("Please enter the number of the desired method to calculate the root: ")
+
+            match choice:
+                case "1":
+                    is_chosen = True
+                    xl = float(input("Please enter the lower bound of the root: "))
+                    xu = float(input("Please enter the upper bound of the root: "))
+                    if fn(xl) * fn(xu) < 0:
+                        print("The equation is solvable")
+                        res = bisection(xl, xu)
+                        is_solved = True
+                    else:
+                        print("The equation is not solvable")
+
+                case "2":
+                    is_chosen = True
+                    xi_1 = float(input("Please enter Xi_-1: "))
+                    x0 = float(input("Please enter Xi_0: "))
+                    res = secant(xi_1, x0)
+                    is_solved = True
+
+                case "3":
+                    is_chosen = True
+                    xl = float(input("Please enter the lower bound of the root: "))
+                    xu = float(input("Please enter the upper bound of the root: "))
+                    if fn(xl) * fn(xu) < 0:
+                        print("The equation is solvable")
+                        res = false_position(xl, xu)
+                        is_solved = True
+                    else:
+                        print("The equation is not solvable")
+
+                case "4":
+                    is_chosen = True
+                    func_arrange()
+                    xi = float(input("Please enter the initial guess of the root: "))
+                    res = simple_fixed_point(xi)
+                    is_solved = True
+
+                case "5":
+                    is_chosen = True
+                    xi = float(input("Please enter the initial guess of the root: "))
+                    res = newton(xi)
+                    is_solved = True
+
+                case _:
+                    print("Please enter a valid option")
+                    continue
+
+        if is_solved:
+            print("The result is: " + str(res))
+
+        ans = input("Do you want to try again? (y/n): ")
+        if ans == "y":
+            continue
+        else:
+            flag = False
+
+main()
