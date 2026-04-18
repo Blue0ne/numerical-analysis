@@ -1,5 +1,4 @@
 import sympy as sp
-
 import config
 
 def num_validator(num):

@@ -111,8 +111,6 @@ tk.Radiobutton(radio_frame, text="False Position", variable=method, value="fp", 
 
 another_status_bs = tk.Label(method_frame, text="")
 
-
-
 def call_method():
     m = method.get()
     match m:
