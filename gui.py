@@ -114,15 +114,31 @@ another_status_bs = tk.Label(method_frame, text="")
 def call_method():
     m = method.get()
     match m:
-        case "bisection" | "fp":
-            xl = xl_entry.get()
-            xu = xu_entry.get()
-            if functions.num_validator(xl) and functions.num_validator(xu):
-                another_status_bs.config(text="Valid", fg="green")
-                return True
-            else:
-                another_status_bs.config(text="Invalid", fg="red")
-                return False
+        case "bisection":
+                xl = xl_entry.get()
+                xu = xu_entry.get()
+
+                if functions.num_validator(xl) and functions.num_validator(xu):
+                    another_status_bs.config(text="Valid", fg="green")
+
+                    xl = float(xl)
+                    xu = float(xu)
+
+                    if functions.fn(xl) * functions.fn(xu) < 0:
+
+                        result = functions.bisection_gui(xl, xu)
+
+                        result_text.delete("1.0", tk.END)
+
+                        for line in result:
+                            result_text.insert(tk.END, line + "\n")
+
+                    else:
+                        result_text.delete("1.0", tk.END)
+                        result_text.insert(tk.END, "Not solvable")
+
+                else:
+                    another_status_bs.config(text="Invalid", fg="red")
         case "newton" | "secant":
             x0 = x0_entry.get()
             if functions.num_validator(x0):
@@ -143,5 +159,7 @@ def call_method():
     return None
 
 calculate_btn = tk.Button(method_frame, text="Calculate", command=call_method)
+result_text = tk.Text(root, height=10, width=60)
+result_text.grid(row=12, column=0, columnspan=4, pady=10)
 
 root.mainloop()
