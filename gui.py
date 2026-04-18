@@ -28,6 +28,7 @@ def confirm():
     target_error = error_entry.get()
     config.target_error = error_entry.get()
     is_valid = functions.input_validator(target_error, eq_text, status_label)
+    hide_result()
 
     if is_valid:
         radio_frame.grid(row=5, column=0, columnspan=2, pady=10)
@@ -35,34 +36,13 @@ def confirm():
     else:
         hide_radio()
 
-tk.Label(root, text="").grid(row=3, column=0)
-tk.Label(root, text="").grid(row=4, column=0)
-tk.Button(root, text="Validate", command=confirm).grid(row=4, column=1)
-
-tk.Label(root, text="").grid(row=5, column=0)
-tk.Label(root, text="").grid(row=6, column=0)
-
-method_frame = tk.Frame(root)
-method_frame.grid(row=11, column=0, columnspan=4, pady=10)
-
-xl_label = tk.Label(method_frame, text="XL:")
-xl_entry = tk.Entry(method_frame)
-
-xu_label = tk.Label(method_frame, text="XU:")
-xu_entry = tk.Entry(method_frame)
-
-x0_label = tk.Label(method_frame, text="Initial Guess (X0):")
-x0_entry = tk.Entry(method_frame)
-
-gx_label = tk.Label(method_frame, text="Arranged Function (G(X):")
-gx_entry = tk.Entry(method_frame)
-
 def hide_all_inputs():
     for widget in method_frame.winfo_children():
         widget.grid_forget()
 
 def update_method_inputs():
     hide_all_inputs()
+    hide_result()
     another_status_bs.config(text="")
 
     m = method.get()
@@ -90,27 +70,6 @@ def update_method_inputs():
     calculate_btn.grid(row=2, column=1, padx=50)
     another_status_bs.grid(row=2, column=2)
 
-radio_frame = tk.Frame(root)
-
-method = tk.StringVar()
-
-tk.Radiobutton(radio_frame, text="Bisection", variable=method, value="bisection", command=update_method_inputs)\
-    .grid(row=0, column=0, sticky='w')
-
-tk.Radiobutton(radio_frame, text="Secant", variable=method, value="secant", command=update_method_inputs)\
-    .grid(row=1, column=0, sticky='w')
-
-tk.Radiobutton(radio_frame, text="Newton", variable=method, value="newton", command=update_method_inputs)\
-    .grid(row=2, column=0, sticky='w')
-
-tk.Radiobutton(radio_frame, text="Simple Fixed Point", variable=method, value="sfp", command=update_method_inputs)\
-    .grid(row=3, column=0, sticky='w')
-
-tk.Radiobutton(radio_frame, text="False Position", variable=method, value="fp", command=update_method_inputs)\
-    .grid(row=4, column=0, sticky='w')
-
-another_status_bs = tk.Label(method_frame, text="")
-
 def call_method():
     m = method.get()
     match m:
@@ -136,9 +95,12 @@ def call_method():
                     else:
                         result_text.delete("1.0", tk.END)
                         result_text.insert(tk.END, "Not solvable")
+                    
+                    show_result()
 
                 else:
                     another_status_bs.config(text="Invalid", fg="red")
+
         case "newton" | "secant":
             x0 = x0_entry.get()
             if functions.num_validator(x0):
@@ -147,6 +109,7 @@ def call_method():
             else:
                 another_status_bs.config(text="Invalid", fg="red")
                 return False
+                
         case "sfp":
             x0 = x0_entry.get()
             gx = gx_entry.get()
@@ -158,8 +121,59 @@ def call_method():
                 return False
     return None
 
+def show_result():
+    result_frame.grid(row=12, column=0)
+    result_text.grid(row=0, column=0, columnspan=4, pady=10)
+
+def hide_result():
+    result_text.delete("1.0", tk.END)
+    result_frame.grid_forget()
+
+tk.Label(root, text="").grid(row=3, column=0)
+tk.Label(root, text="").grid(row=4, column=0)
+tk.Button(root, text="Validate", command=confirm).grid(row=4, column=1)
+
+tk.Label(root, text="").grid(row=5, column=0)
+tk.Label(root, text="").grid(row=6, column=0)
+
+method_frame = tk.Frame(root)
+method_frame.grid(row=11, column=0, columnspan=4, pady=10)
+
+xl_label = tk.Label(method_frame, text="XL:")
+xl_entry = tk.Entry(method_frame)
+
+xu_label = tk.Label(method_frame, text="XU:")
+xu_entry = tk.Entry(method_frame)
+
+x0_label = tk.Label(method_frame, text="Initial Guess (X0):")
+x0_entry = tk.Entry(method_frame)
+
+gx_label = tk.Label(method_frame, text="Arranged Function (G(X):")
+gx_entry = tk.Entry(method_frame)
+
 calculate_btn = tk.Button(method_frame, text="Calculate", command=call_method)
-result_text = tk.Text(root, height=10, width=60)
-result_text.grid(row=12, column=0, columnspan=4, pady=10)
+another_status_bs = tk.Label(method_frame, text="")
+
+radio_frame = tk.Frame(root)
+
+method = tk.StringVar()
+
+tk.Radiobutton(radio_frame, text="Bisection", variable=method, value="bisection", command=update_method_inputs)\
+    .grid(row=0, column=0, sticky='w')
+
+tk.Radiobutton(radio_frame, text="Secant", variable=method, value="secant", command=update_method_inputs)\
+    .grid(row=1, column=0, sticky='w')
+
+tk.Radiobutton(radio_frame, text="Newton", variable=method, value="newton", command=update_method_inputs)\
+    .grid(row=2, column=0, sticky='w')
+
+tk.Radiobutton(radio_frame, text="Simple Fixed Point", variable=method, value="sfp", command=update_method_inputs)\
+    .grid(row=3, column=0, sticky='w')
+
+tk.Radiobutton(radio_frame, text="False Position", variable=method, value="fp", command=update_method_inputs)\
+    .grid(row=4, column=0, sticky='w')
+
+result_frame = tk.Frame(root)
+result_text = tk.Text(result_frame, height=10, width=60)
 
 root.mainloop()
