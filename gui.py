@@ -128,6 +128,15 @@ def show_result():
 def hide_result():
     result_text.delete("1.0", tk.END)
     result_frame.grid_forget()
+    
+def on_edit(event):
+    hide_result()
+eq_entry.bind("<KeyRelease>", on_edit)
+error_entry.bind("<KeyRelease>", on_edit)
+xl_entry.bind("<KeyRelease>", on_edit)
+xu_entry.bind("<KeyRelease>", on_edit)
+x0_entry.bind("<KeyRelease>", on_edit)
+gx_entry.bind("<KeyRelease>", on_edit)
 
 tk.Label(root, text="").grid(row=3, column=0)
 tk.Label(root, text="").grid(row=4, column=0)
