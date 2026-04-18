@@ -131,12 +131,6 @@ def hide_result():
     
 def on_edit(event):
     hide_result()
-eq_entry.bind("<KeyRelease>", on_edit)
-error_entry.bind("<KeyRelease>", on_edit)
-xl_entry.bind("<KeyRelease>", on_edit)
-xu_entry.bind("<KeyRelease>", on_edit)
-x0_entry.bind("<KeyRelease>", on_edit)
-gx_entry.bind("<KeyRelease>", on_edit)
 
 tk.Label(root, text="").grid(row=3, column=0)
 tk.Label(root, text="").grid(row=4, column=0)
@@ -184,5 +178,12 @@ tk.Radiobutton(radio_frame, text="False Position", variable=method, value="fp", 
 
 result_frame = tk.Frame(root)
 result_text = tk.Text(result_frame, height=10, width=60)
+
+eq_entry.bind("<KeyRelease>", on_edit)
+error_entry.bind("<KeyRelease>", on_edit)
+xl_entry.bind("<KeyRelease>", on_edit)
+xu_entry.bind("<KeyRelease>", on_edit)
+x0_entry.bind("<KeyRelease>", on_edit)
+gx_entry.bind("<KeyRelease>", on_edit)
 
 root.mainloop()
