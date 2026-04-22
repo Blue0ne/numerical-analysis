@@ -8,6 +8,11 @@ def num_validator(num):
     except ValueError:
         return False
 
+def zero_div(numerator, denominator, eps = 1e-12):
+    if abs(denominator) < eps:
+        return None
+    return numerator / denominator
+
 def input_validator(target_error, eq_text, status_label):
     if 'x' not in eq_text:
         status_label.config(text="Function must contain 'x'", fg="red")
@@ -64,7 +69,7 @@ def sfp_input(gx):
         config.arranged_func += letter
 
         if letter.isdigit() and index + 1 < len(gx) and gx[index + 1] == 'x':
-             config.arranged_func += '*'
+            config.arranged_func += '*'
         elif letter.isdigit() and index + 4 <= len(gx) and gx[index + 1:index + 4] in ["sin", "cos", "tan"]:
             config.arranged_func += '*'
         elif letter.isdigit() and index + 5 <= len(gx) and gx[index + 1:index + 5] == "sqrt":
@@ -94,9 +99,15 @@ def newton_gui(xi):
     config.i = 0
 
     while True:
+
+        if zero_div(fn(xi), fn_dash(xi)) == None:
+            return None
+        
         xi_1 = xi - (fn(xi) / fn_dash(xi))
 
         if config.i != 0:
+            if zero_div(abs(xi_1 - xi), xi_1) == None:
+                return None
             error = abs((xi_1 - xi) / xi_1) * 100
         else:
             error = None
@@ -109,6 +120,7 @@ def newton_gui(xi):
         results.append(line)
 
         if error is not None and error <= float(config.target_error):
+            results.append(f"The root is approximately {xi_1}")
             break
 
         xi = xi_1
@@ -127,6 +139,8 @@ def false_position_gui(xl, xu):
         xr = xu - (fn(xu) * (xl - xu)) / (fn(xl) - fn(xu))
 
         if config.i != 0:
+            if zero_div(abs(xr - xr_old), xr) == None:
+                return None
             error = abs((xr - xr_old) / xr) * 100
         else:
             error = None
@@ -139,6 +153,7 @@ def false_position_gui(xl, xu):
         results.append(line)
 
         if error is not None and error <= float(config.target_error):
+            results.append(f"The root is approximately {xr}")
             break
 
         if fn(xl) * fn(xr) < 0:
@@ -160,6 +175,8 @@ def secant_gui(xi_1, xi):
         xi_2 = xi - (fn(xi) * (xi_1 - xi)) / (fn(xi_1) - fn(xi))
 
         if config.i != 0:
+            if zero_div(abs(xi_2 - xi), xi_2) == None:
+                return None
             error = abs((xi_2 - xi) / xi_2) * 100
         else:
             error = None
@@ -172,6 +189,7 @@ def secant_gui(xi_1, xi):
         results.append(line)
 
         if error is not None and error <= float(config.target_error):
+            results.append(f"The root is approximately {xi_2}")
             break
 
         xi_1 = xi
@@ -189,6 +207,8 @@ def simple_fixed_point_gui(xi):
         xi_1 = solve(xi)
 
         if config.i != 0:
+            if zero_div(abs(xi_1 - xi), xi_1) == None:
+                return None
             error = abs((xi_1 - xi) / xi_1) * 100
         else:
             error = None
@@ -201,6 +221,7 @@ def simple_fixed_point_gui(xi):
         results.append(line)
 
         if error is not None and error <= float(config.target_error):
+            results.append(f"The root is approximately {xi_1}")
             break
 
         xi = xi_1
@@ -219,6 +240,8 @@ def bisection_gui(xl, xu):
         xr = (xl + xu) / 2
 
         if config.i != 0:
+            if zero_div(abs(xr - xr_old), xr) == None:
+                return None
             error = abs((xr - xr_old) / xr) * 100
         else:
             error = None
@@ -231,6 +254,7 @@ def bisection_gui(xl, xu):
         results.append(line)
 
         if error is not None and error <= float(config.target_error):
+            results.append(f"The root is approximately {xr}")
             break
 
         if fn(xl) * fn(xr) < 0:
