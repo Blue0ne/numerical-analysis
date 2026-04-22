@@ -99,10 +99,19 @@ def call_method():
 
                     result = functions.bisection_gui(xl, xu)
 
+                    if result == None:
+                        result_text.delete("1.0", tk.END)
+                        result_text.insert(tk.END, "Error: Division by Zero\n")
+                        show_result()
+                        return
+
                     result_text.delete("1.0", tk.END)
 
-                    for line in result:
+                    for line in result[:-1]: 
                         result_text.insert(tk.END, line + "\n")
+
+                    result_text.insert(tk.END, "-" * 60 + "\n")
+                    result_text.insert(tk.END, result[-1] + "\n", "result")
 
                 else:
                     result_text.delete("1.0", tk.END)
@@ -127,10 +136,19 @@ def call_method():
 
                     result = functions.false_position_gui(xl, xu)
 
+                    if result == None:
+                        result_text.delete("1.0", tk.END)
+                        result_text.insert(tk.END, "Error: Division by Zero\n")
+                        show_result()
+                        return
+
                     result_text.delete("1.0", tk.END)
 
-                    for line in result:
+                    for line in result[:-1]: 
                         result_text.insert(tk.END, line + "\n")
+
+                    result_text.insert(tk.END, "-" * 60 + "\n")
+                    result_text.insert(tk.END, result[-1] + "\n", "result")
 
                 else:
                     result_text.delete("1.0", tk.END)
@@ -149,10 +167,19 @@ def call_method():
                 x0 = float(x0)
                 result = functions.newton_gui(x0)
 
+                if result == None:
+                    result_text.delete("1.0", tk.END)
+                    result_text.insert(tk.END, "Error: Division by Zero\n")
+                    show_result()
+                    return
+
                 result_text.delete("1.0", tk.END)
 
-                for line in result:
+                for line in result[:-1]: 
                     result_text.insert(tk.END, line + "\n")
+
+                result_text.insert(tk.END, "-" * 60 + "\n")
+                result_text.insert(tk.END, result[-1] + "\n", "result")
                 show_result()
             else:
                 another_status_bs.config(text="Invalid", fg="red")
@@ -169,10 +196,19 @@ def call_method():
 
                 result = functions.secant_gui(x0, x1)
 
+                if result == None:
+                        result_text.delete("1.0", tk.END)
+                        result_text.insert(tk.END, "Error: Division by Zero\n")
+                        show_result()
+                        return
+
                 result_text.delete("1.0", tk.END)
 
-                for line in result:
+                for line in result[:-1]: 
                     result_text.insert(tk.END, line + "\n")
+
+                result_text.insert(tk.END, "-" * 60 + "\n")
+                result_text.insert(tk.END, result[-1] + "\n", "result")
 
                 show_result()
             else:
@@ -189,9 +225,18 @@ def call_method():
 
                 result = functions.simple_fixed_point_gui(x0)
 
+                if result == None:
+                        result_text.delete("1.0", tk.END)
+                        result_text.insert(tk.END, "Error: Division by Zero\n")
+                        show_result()
+                        return
+
                 result_text.delete("1.0", tk.END)
-                for line in result:
+                for line in result[:-1]: 
                     result_text.insert(tk.END, line + "\n")
+
+                result_text.insert(tk.END, "-" * 60 + "\n")
+                result_text.insert(tk.END, result[-1] + "\n", "result")
 
                 show_result()
 
@@ -199,7 +244,7 @@ def call_method():
                 another_status_bs.config(text="Invalid", fg="red")
 
 def show_result():
-    result_frame.grid(row=12, column=0)
+    result_frame.grid(row=12, column=0, columnspan=4, sticky='w')
     result_text.grid(row=0, column=0, columnspan=4, pady=10)
 
 
@@ -233,7 +278,7 @@ x0_entry = tk.Entry(method_frame)
 x1_label = tk.Label(method_frame, text="(X-1):")
 x1_entry = tk.Entry(method_frame)
 
-gx_label = tk.Label(method_frame, text="Arranged Function (G(X):")
+gx_label = tk.Label(method_frame, text="Arranged Function (G(X)):")
 gx_entry = tk.Entry(method_frame)
 
 calculate_btn = tk.Button(method_frame, text="Calculate", command=call_method)
@@ -260,6 +305,7 @@ tk.Radiobutton(radio_frame, text="False Position", variable=method, value="fp", 
 
 result_frame = tk.Frame(root)
 result_text = tk.Text(result_frame, height=10, width=80)
+result_text.tag_configure("result", font=("Segoe UI", 8, "bold"))
 
 eq_entry.bind("<KeyRelease>", on_edit)
 error_entry.bind("<KeyRelease>", on_edit)
